@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   margin-top: 40px;
 }
 
@@ -33,4 +33,18 @@
   flex-direction: column;
   overflow-y: auto;
   max-height: 75vh;
+  padding: 10px;
+}
+
+.todoList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.todoList::-webkit-scrollbar-track {
+  background-color: transparent; 
+}
+
+.todoList::-webkit-scrollbar-thumb {
+  background-color: #2C8CD2;
+  border-radius: 3px;
 }
