@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  overflow: auto;
+}
+
+.container > :first-child {
+  flex: 2.7;
+}
+
+.container > :last-child {
+  flex: 1;
+  min-width: 450px;
+}
