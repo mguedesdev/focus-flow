@@ -1,5 +1,7 @@
-.timerContainer{
-  background: url('../../assets/wallpaper.jpg') lightgray 0% / cover no-repeat;
+.timerContainer {
+  background: linear-gradient(rgba(15, 0, 80, 0.6), rgba(0, 0, 0, 0.5)), url('../../assets/wallpaper.jpg');
+  background-blend-mode: darken;
+  background-size: cover;
   height: 100vh;
   width: 100%;
   display: flex;
@@ -7,11 +9,13 @@
   align-items: center;
 }
 
+
 .timer-container {
-  width: 500px;
-  height: 500px;
-  background-color: rgb(244, 244, 244);
+  width: 400px;
+  height: 400px;
+  background: transparent;
   border-radius: 100%;
+  position: relative;
 }
 
 .shake {
@@ -40,9 +44,39 @@
 
 .timer-indicator {
   fill: none;
-  stroke: #2C8CD2;
+  stroke: #ffffff;
   stroke-width: 2;
   stroke-linecap: round;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
+}
+
+.button-timer {
+  background: none;
+  border: none;
+  font-size: 42px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #ffffff;
+
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.timer-list {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 20px;
+  position: absolute;
+
+  bottom: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 5px;
+  border-radius: 10px;
+
+  display: flex;
+
 }

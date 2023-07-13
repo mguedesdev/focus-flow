@@ -13,6 +13,8 @@ Focus-Flow é um sistema de gerenciamento de tempo baseado na técnica Pomodoro,
 O projeto foi iniciado com Vite e é construído com React.js. Outras tecnologias e ferramentas utilizadas incluem:
 
 * [React](https://reactjs.org/)
+* [React Icons](https://react-icons.github.io/react-icons/)
+* [PropTypes](https://pt-br.reactjs.org/docs/typechecking-with-proptypes.html)
 * [Vite](https://vitejs.dev/)
 * [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
 * [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -32,7 +34,7 @@ O Focus-Flow oferece as seguintes funcionalidades:
 
 Este projeto está aberto para contribuições. Sinta-se à vontade para fazer um fork do projeto, criar uma branch, fazer alterações e enviar um Pull Request.
 
-Por favor, garanta que suas contribuições estejam de acordo com as diretrizes do projeto.
+Ao contribuir, por favor siga as melhores práticas de desenvolvimento, incluindo a separação de componentes por responsabilidades e o uso adequado de hooks como useState, useEffect e useCallback.
 
 ## Contato
 

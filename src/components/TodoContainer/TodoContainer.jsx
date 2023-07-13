@@ -45,7 +45,7 @@ const TodoBox = () => {
           />
         ))}
       </div>
-      <ButtonTodo onClick={addToDo} />
+      <ButtonTodo text={'Nova Tarefa'} onClick={addToDo} />
     </section>
   );
 };
