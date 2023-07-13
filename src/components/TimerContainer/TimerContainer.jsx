@@ -3,74 +3,78 @@ import './TimerContainer.css';
 import { FaPauseCircle, FaPlayCircle } from 'react-icons/fa';
 
 function Timer() {
-  const duration = 5 * 1000; // Converted to milliseconds
+  const timers = [6, 3, 6, 3, 6, 3, 6, 12];
   const circumference = 2 * Math.PI * 50;
-  const [timeLeft, setTimeLeft] = useState(duration);
+  const [timeLeft, setTimeLeft] = useState(timers[0] * 1000);
   const [shake, setShake] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
-  const [notificationSent, setNotificationSent] = useState(false); // Novo estado
-
-  // Solicita permissão para notificações quando o componente for montado
-  useEffect(() => {
-    Notification.requestPermission();
-  }, []);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [listTimers, setListTimers] = useState(timers.slice(0, 3));
+  const [countPomodoro, setCountPomodoro] = useState(0);
 
   useEffect(() => {
     if (isRunning) {
-      setStartTime(Date.now() - (duration - timeLeft));
+      setStartTime(Date.now() - (timers[currentIndex] * 1000 - timeLeft));
     }
-  }, [isRunning, duration, timeLeft]);
+  }, [isRunning, currentIndex, timeLeft]);
 
   useEffect(() => {
     let timerId;
     if (isRunning) {
       timerId = setInterval(() => {
         const elapsedTime = Date.now() - startTime;
-        const newTimeLeft = duration - elapsedTime;
-
+        const newTimeLeft = timers[currentIndex] * 1000 - elapsedTime;
+    
         setTimeLeft(newTimeLeft > 0 ? newTimeLeft : 0);
         if (newTimeLeft <= 0) {
-          setShake(true);
-          // Enviar uma notificação quando o tempo se esgotar, mas apenas se uma notificação não tiver sido enviada ainda
-          if (!notificationSent) {
-            new Notification('Timer finished!');
-            setNotificationSent(true);
+          let newCurrentIndex = (currentIndex + 1) % timers.length;
+          setCurrentIndex(newCurrentIndex);
+          setTimeLeft(timers[newCurrentIndex] * 1000);
+          if (newCurrentIndex + 3 > timers.length) {
+            setListTimers(timers.slice(newCurrentIndex).concat(timers.slice(0, 3 - (timers.length - newCurrentIndex))));
+          } else {
+            setListTimers(timers.slice(newCurrentIndex, newCurrentIndex + 3));
+          }          
+          if (newCurrentIndex % 2 === 0) {
+            setCountPomodoro(prevCount => prevCount + 1);
           }
+          clearInterval(timerId); 
+          setIsRunning(false); 
+          setShake(true);
         }
       }, 10);
-    } else {
-      setNotificationSent(false); // Restaura a flag quando o timer é interrompido
     }
-    return () => clearInterval(timerId);
-  }, [duration, isRunning, startTime, notificationSent]);
 
+    return () => clearInterval(timerId); 
+  }, [timers, isRunning, startTime, currentIndex, timeLeft]);
+
+  useEffect(() => {
+    if (isRunning) {
+      setShake(false);
+    }
+  }, [isRunning]);
+  
   const getOffset = () => {
     if (isRunning && startTime) {
       const elapsedTime = Date.now() - startTime;
-      return (circumference * elapsedTime) / duration;
+      return (circumference * elapsedTime) / (timers[currentIndex] * 1000);
     } else {
       return circumference;
     }
   };
   
-
   const formatTime = useCallback((time) => {
-    const totalSeconds = Math.round(time / 1000); // Converted to seconds
+    const totalSeconds = Math.round(time / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }, []);
   
   const toggleTimer = useCallback(() => {
-    setIsRunning((prevIsRunning) => {
-      const newState = !prevIsRunning;
-      if (newState === false && timeLeft <= 0) {
-        setShake(false);
-      }
-      return newState;
-    });
-  }, [timeLeft]);
+    setIsRunning(prevIsRunning => !prevIsRunning);
+  }, []);
+
 
   return (
     <div className="timerContainer">
@@ -96,7 +100,11 @@ function Timer() {
           </text>
         </svg>
         <div className="timer-list">
-          Oi
+          {listTimers.map((listTimer, index) => <p key={index}> {formatTime(listTimer * 1000)} </p>)}
+        </div>
+        <div className="pomodoro-count">
+          <span>Pomodoros</span>
+          {countPomodoro}
         </div>
         <button className="button-timer" onClick={toggleTimer}>
           {isRunning ? <FaPauseCircle/> : <FaPlayCircle/>}
