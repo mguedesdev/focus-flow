@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './TodoItem.css';
 import { IoIosClose } from 'react-icons/io';
 
+
 const TodoItem = ({ title, obs, removeToDo }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [titleState, setTitleState] = useState(title);
@@ -11,6 +12,16 @@ const TodoItem = ({ title, obs, removeToDo }) => {
 
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
+  };
+
+  const handleFocus = (event) => {
+    event.target.placeholder = ''; // Remove o placeholder
+  };
+
+  const handleBlur = (event) => {
+    if (!event.target.value) {
+      event.target.placeholder = 'Nova Tarefa'; // Restaura o placeholder
+    }
   };
 
   useEffect(() => {
@@ -25,8 +36,11 @@ const TodoItem = ({ title, obs, removeToDo }) => {
       <label className="text-checkbox">
         <input
           className="title-todoItem"
+          placeholder="Nova Tarefa"
           value={titleState}
           onChange={(event) => setTitleState(event.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <input type="checkbox" checked={isChecked} onChange={handleChange} />
         <button className="button-todoItem" onClick={removeToDo}>

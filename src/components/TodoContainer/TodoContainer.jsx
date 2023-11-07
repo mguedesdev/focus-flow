@@ -2,18 +2,16 @@ import React, { useState } from 'react';
 
 import './TodoContainer.css';
 import TodoItem from '../TodoItem/TodoItem';
-import { IoMdSettings } from 'react-icons/io';
 import ButtonTodo from '../ButtonTodo/ButtonTodo';
 
 const TodoBox = () => {
-  const [toDos, setToDos] = useState([{ id: 1, title: 'Tarefa 1', obs: '' }]);
+  const [toDos, setToDos] = useState([{ id: 1, title: '', obs: '' }]);
 
   const addToDo = () => {
     setToDos((prevToDos) => {
-      const newTaskId = prevToDos.length === 0 ? 1 : prevToDos[prevToDos.length - 1].id + 1;
       const newToDo = {
-        id: newTaskId,
-        title: `Tarefa ${newTaskId}`,
+        id: Date.now(), 
+        title: '', 
         obs: '',
       };
 
@@ -31,9 +29,6 @@ const TodoBox = () => {
     <section className="todoBox">
       <div className="todoTitle-box">
         <span>Tarefas</span>
-        <button className="button--todo-settings" type="button" aria-label="Configurações">
-          <IoMdSettings />
-        </button>
       </div>
       <div className="todoList">
         {toDos.map((toDo) => (

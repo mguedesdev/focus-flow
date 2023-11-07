@@ -3,66 +3,50 @@ import './TimerContainer.css';
 import { FaPauseCircle, FaPlayCircle } from 'react-icons/fa';
 
 function Timer() {
-  const timers = [6, 3, 6, 3, 6, 3, 6, 12];
+  const timers = [900, 300, 900, 300, 900, 300, 900, 1500];
   const circumference = 2 * Math.PI * 50;
   const [timeLeft, setTimeLeft] = useState(timers[0] * 1000);
   const [shake, setShake] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
-  const [startTime, setStartTime] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [listTimers, setListTimers] = useState(timers.slice(0, 3));
   const [countPomodoro, setCountPomodoro] = useState(0);
 
   useEffect(() => {
-    if (isRunning) {
-      setStartTime(Date.now() - (timers[currentIndex] * 1000 - timeLeft));
-    }
-  }, [isRunning, currentIndex, timeLeft]);
-
-  useEffect(() => {
     let timerId;
+
     if (isRunning) {
+      const endTime = Date.now() + timeLeft;
+
       timerId = setInterval(() => {
-        const elapsedTime = Date.now() - startTime;
-        const newTimeLeft = timers[currentIndex] * 1000 - elapsedTime;
-    
-        setTimeLeft(newTimeLeft > 0 ? newTimeLeft : 0);
+        const newTimeLeft = endTime - Date.now();
+
         if (newTimeLeft <= 0) {
           let newCurrentIndex = (currentIndex + 1) % timers.length;
           setCurrentIndex(newCurrentIndex);
           setTimeLeft(timers[newCurrentIndex] * 1000);
-          if (newCurrentIndex + 3 > timers.length) {
-            setListTimers(timers.slice(newCurrentIndex).concat(timers.slice(0, 3 - (timers.length - newCurrentIndex))));
-          } else {
-            setListTimers(timers.slice(newCurrentIndex, newCurrentIndex + 3));
-          }          
-          if (newCurrentIndex % 2 === 0) {
-            setCountPomodoro(prevCount => prevCount + 1);
-          }
-          clearInterval(timerId); 
+          setListTimers(getNextTimers(newCurrentIndex));
+          if (newCurrentIndex % 2 === 0) setCountPomodoro(prevCount => prevCount + 1);
           setIsRunning(false); 
           setShake(true);
+        } else {
+          setTimeLeft(newTimeLeft);
         }
       }, 10);
     }
 
     return () => clearInterval(timerId); 
-  }, [timers, isRunning, startTime, currentIndex, timeLeft]);
+  }, [isRunning, currentIndex]);
+
+  const getNextTimers = (index) => {
+    return timers.slice(index, index + 3).concat(timers.slice(0, 3)).slice(0, 3);
+  };
 
   useEffect(() => {
-    if (isRunning) {
-      setShake(false);
-    }
+    if (isRunning) setShake(false);
   }, [isRunning]);
-  
-  const getOffset = () => {
-    if (isRunning && startTime) {
-      const elapsedTime = Date.now() - startTime;
-      return (circumference * elapsedTime) / (timers[currentIndex] * 1000);
-    } else {
-      return circumference;
-    }
-  };
+
+  const getOffset = () => (circumference * timeLeft) / (timers[currentIndex] * 1000);
   
   const formatTime = useCallback((time) => {
     const totalSeconds = Math.round(time / 1000);
@@ -71,10 +55,7 @@ function Timer() {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }, []);
   
-  const toggleTimer = useCallback(() => {
-    setIsRunning(prevIsRunning => !prevIsRunning);
-  }, []);
-
+  const toggleTimer = useCallback(() => setIsRunning(prevIsRunning => !prevIsRunning), []);
 
   return (
     <div className="timerContainer">
@@ -86,7 +67,7 @@ function Timer() {
             cy="52.5"
             r="50"
             strokeDasharray={`${circumference} ${circumference}`}
-            strokeDashoffset={circumference - getOffset()}
+            strokeDashoffset={getOffset() - circumference }
           />
           <circle
             className="timer-indicator"

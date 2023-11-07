@@ -5,7 +5,9 @@ import './ButtonTodo.css';
 
 const ButtonTodo = ({onClick, text}) => {
   return (
-    <button className="buttonTodo" onClick={onClick}>{text}</button>
+    <div className="buttonTodo_Container">
+      <button className="buttonTodo" onClick={onClick}>{text}</button>
+    </div>
   );
 };
 

@@ -7,7 +7,12 @@
   font-size: 17px;
   border-radius: 11px;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   cursor: pointer;
 
+}
+
+.buttonTodo_Container {
+  width: 100%;
+  padding: 0 10px;
 }
